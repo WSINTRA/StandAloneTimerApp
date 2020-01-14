@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Wills Timer App</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link rel="stylesheet" href="index.css"> 
+    <link href="https://fonts.googleapis.com/css?family=Gayathri&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Timer App</h1>
+   <!-- create an input that takes a number and a radio checkbox for minutes or seconds-->
+   <div id="App">
+     <input type="text" id="digit_input" name="digit_input" value="0">
+      <label class="container">Minutes
+        <input id="minutes" type="radio" name="radio"checked="checked">
+        <span class="checkmark"></span>
+      </label>
+      <label class="container">Seconds
+        <input id="seconds" type="radio" name="radio">
+        <span class="checkmark"></span>
+      </label>
+      <button id="myBtn" class="button">GO!</button>
+
+   </div> 
+  <script type="text/javascript">
+      let goBtn = document.getElementById("myBtn");
+     
+      goBtn.addEventListener("click", timerCountDown);
+      
+      
+
+      function createTimer(newContent){
+        let timerSequence = document.createElement("h2")
+        timerSequence.id = "newTimer"
+        timerSequence.appendChild(newContent);
+        return timerSequence
+      }
+
+      function timerCountDown(){
+      
+      let app = document.getElementById("App");
+      let readyBtn = document.createElement("button");
+      let buttonText = document.createTextNode("Ready!");
+      let minutes = document.getElementById("minutes").checked
+      let seconds = document.getElementById("seconds").checked
+      let timerStartFrom = document.getElementById("digit_input").value
+      let prevTimer = document.getElementById("newTimer");
+      let prevButton = document.getElementById("ready_button");
+          readyBtn.appendChild(buttonText);
+          readyBtn.className = "button";
+          readyBtn.id = "ready_button";
+          readyBtn.addEventListener("click", function(){ timerStart(timerStartFrom,minutes,seconds) } );
+        
+        if (Number.isNaN(parseInt(timerStartFrom))){
+          alert("only enter numbers!!")
+          return
+        }
+        if(prevTimer && prevButton){
+          prevTimer.remove();
+          prevButton.remove();
+        }
+
+        if (minutes){
+            let newContent = document.createTextNode(`${timerStartFrom}:00`); 
+            app.appendChild(createTimer(newContent)) 
+        }
+        if (seconds){
+            let newContent = document.createTextNode(`${timerStartFrom}`); 
+            app.appendChild(createTimer(newContent)) 
+        }    
+
+        app.appendChild(readyBtn)
+      }
+      
+
+      function timerStart(startFrom,minutes,seconds){
+        let startFromNumber = parseInt(startFrom)
+        let timerDisplay = document.getElementById("newTimer")
+        let oneMin = 60
+        if (seconds){
+          var secondTimer = setInterval(function(){
+              timerDisplay.innerText = `${startFromNumber}`;
+              startFromNumber--
+              if(startFromNumber < 0 ){
+                clearInterval(secondTimer)
+              }  
+            }, 1000);
+          }
+
+        if (minutes){
+          startFromNumber--
+          var secondsCountDown = setInterval(function(){
+            oneMin --
+            timerDisplay.innerText = `${startFromNumber}:${oneMin}`;
+            if(oneMin <= 0){
+              startFromNumber--
+              oneMin = 60
+            }
+            if(startFromNumber < 0){
+              clearInterval(secondsCountDown)
+            }
+            },1000);
+        }
+          
+        }
+      
+     
+
+  </script>
+  </body>
+</html>
